@@ -1,12 +1,50 @@
-# Efficient Query Execution for RAG using Factorized Embeddings
+# Accelerating Retrieval with Spectral-Semantic Randomized Embedding Compression
 
-Retrieval Augmented Generation (RAG) pipelines often store high-dimensional embeddings (768D from transformer-based models) for millions of documents, which can lead to memory bottlenecks and slow retrieval times. By factorizing these embeddings into low-rank matrices, we aim to reduce memory and speed up search. However, naive compression can destroy semantic relationships. We aim to systematically tests factorization methods to see which preserve retrieval and generation quality the best.
+This repository contains code and experiments for the project conducted as part of **UC Berkeley's Data Science Honors Program**.
 
-To replicate this code, please obtain the necessary documents and queries by running our data download script, which fetches a dataset from BEIR (SciFact is the default one provded) and any additional data required for generation using MTEB or USEB. After that, please use the main experiment notebook which loads the documents and queries with their respective ground-truth relevance judgments. The notebook encodes the document and quaries into high-dimensional vectors and applies the factorization methods to reduce the dimension, and indexes the factorized embeddings in FAISS for nearest-neighbor retrieval. 
+**Advisor:** Prof. James Demmel
 
-After each method is evaluated, performance metrics, such as recall and query latency, are sent to the results folder.
+## Project Overview
 
-# Status
-**In Progress**: The code is still being refined.
+Retrieval-Augmented Generation (RAG) pipelines typically rely on storing high-dimensional embeddings (e.g., 768-dimensional vectors from transformer-based models) for millions of documents. This presents challenges related to memory usage and retrieval latency.
 
-For any questions, please contact aneesh.durai@berkeley.edu.
+This project explores embedding compression using Randomized Numerical Linear Algebra (RandNLA) techniques, specifically randomized low-rank factorizations. The aim is to reduce memory and speed up retrieval while preserving spectral and semantic structure to avoid harming retrieval accuracy.
+
+
+## Repository Structure
+
+Each experiment is encapsulated in an individual ipynb notebook, with a shared setup for dataset downloading, embedding generation using the MPNET model, and evaluation using retrieval metrics.
+
+## Setup Instructions
+
+To replicate, please do the following.
+
+Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+All notebooks will automatically download the required datasets from BEIR.
+
+   ```python
+   DATASET_URLS = {
+       "scifact": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+       "scidocs": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scidocs.zip",
+       "fiqa": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip",
+       "nfcorpus": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nfcorpus.zip"
+   }
+   ```
+
+To add another dataset, simply add the dataset's name and URL to `DATASET_URLS`, and include it in the `DATASET_LIST` variable in the corresponding cell.
+
+We use MPNET (768-dimensional encoder) for all experiments to ensure consistency. You may modify the `EMBED_MODELS` dictionary to use a different embedding model, although this may affect comparability.
+
+## Running the Experiments
+
+Each notebook is executable end-to-end. We recommend using Kaggle Notebooks with a **P100 GPU** for best performance.
+
+## Contact
+
+For questions or collaborations, feel free to reach out: aneesh.durai@berkeley.edu.
+
